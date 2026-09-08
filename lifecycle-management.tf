@@ -9,13 +9,13 @@ resource "aws_lambda_function" "az_rebalancing_suspender" {
   architectures = [var.lambda_architecture]
   timeout       = 30
 
-  filename         = data.archive_file.az_rebalancing_suspender.output_path
-  source_code_hash = data.archive_file.az_rebalancing_suspender.output_base64sha256
+  filename         = archive_file.az_rebalancing_suspender.output_path
+  source_code_hash = archive_file.az_rebalancing_suspender.output_base64sha256
 
   tags = local.common_tags
 }
 
-data "archive_file" "az_rebalancing_suspender" {
+resource "archive_file" "az_rebalancing_suspender" {
   type        = "zip"
   output_path = "${path.module}/.terraform/lambda/${local.stack_name_full}-az-rebalancing-suspender.zip"
 
@@ -90,13 +90,13 @@ resource "aws_lambda_function" "stop_buildkite_agents" {
   architectures = [var.lambda_architecture]
   timeout       = 60
 
-  filename         = data.archive_file.stop_buildkite_agents[0].output_path
-  source_code_hash = data.archive_file.stop_buildkite_agents[0].output_base64sha256
+  filename         = archive_file.stop_buildkite_agents[0].output_path
+  source_code_hash = archive_file.stop_buildkite_agents[0].output_base64sha256
 
   tags = local.common_tags
 }
 
-data "archive_file" "stop_buildkite_agents" {
+resource "archive_file" "stop_buildkite_agents" {
   count = local.enable_graceful_shutdown ? 1 : 0
 
   type        = "zip"
