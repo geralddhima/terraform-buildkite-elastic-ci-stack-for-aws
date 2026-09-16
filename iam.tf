@@ -162,6 +162,36 @@ resource "aws_iam_role_policy" "buildkite_agent_policy" {
           ]
         }
       ] : [],
+      local.has_git_mirror_seed_bucket ? [
+        {
+          Sid    = "GitMirrorSeedBucketRead"
+          Effect = "Allow"
+          Action = [
+            "s3:GetObject"
+          ]
+          Resource = [
+            "arn:aws:s3:::${var.git_mirror_seed_bucket}/git-mirror-seeds/*"
+          ]
+        },
+        {
+          Sid    = "GitMirrorSeedBucketList"
+          Effect = "Allow"
+          Action = [
+            "s3:ListBucket"
+          ]
+          Resource = [
+            "arn:aws:s3:::${var.git_mirror_seed_bucket}"
+          ]
+          Condition = {
+            StringLike = {
+              "s3:prefix" = [
+                "git-mirror-seeds/",
+                "git-mirror-seeds/*"
+              ]
+            }
+          }
+        }
+      ] : [],
       [
         {
           Sid    = "CloudwatchLogs"

@@ -21,6 +21,9 @@ locals {
   has_secrets_bucket    = local.create_secrets_bucket || local.use_existing_secrets
   use_artifacts_bucket  = var.artifacts_bucket != ""
 
+  # Git mirror seeding is Linux only and needs git mirrors enabled
+  has_git_mirror_seed_bucket = !local.is_windows && var.buildkite_agent_enable_git_mirrors && var.git_mirror_seed_bucket != ""
+
   # Instance role, permissions boundary, and policy settings
   use_custom_iam_role              = var.instance_role_arn != ""
   use_custom_role_name             = var.instance_role_name != ""
