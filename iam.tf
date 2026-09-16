@@ -172,7 +172,9 @@ resource "aws_iam_role_policy" "buildkite_agent_policy" {
           Resource = [
             "arn:aws:s3:::${var.git_mirror_seed_bucket}/git-mirror-seeds/*"
           ]
-        },
+        }
+      ] : [],
+      local.has_git_mirror_seed_bucket ? [
         {
           Sid    = "GitMirrorSeedBucketList"
           Effect = "Allow"
