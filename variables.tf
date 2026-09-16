@@ -99,6 +99,12 @@ variable "buildkite_agent_enable_git_mirrors" {
   default     = false
 }
 
+variable "git_mirror_seed_bucket" {
+  description = "Optional - Name of an existing S3 bucket containing git mirror seed archives under the git-mirror-seeds/ prefix, one archive (.tar, .tar.gz, or .zip) per repository, named after the agent's mirror directory for that repository. Only used when buildkite_agent_enable_git_mirrors is true; each archive is extracted into the git-mirrors path at instance boot, before the agent starts. If blank, or archives cannot be fetched, git mirrors start empty as usual. Instances using a custom instance_role_arn must be granted access to this bucket separately. Linux instances only."
+  type        = string
+  default     = ""
+}
+
 variable "buildkite_agent_tracing_backend" {
   description = "Optional - The tracing backend to use for CI tracing. See https://buildkite.com/docs/agent/v3/tracing."
   type        = string
