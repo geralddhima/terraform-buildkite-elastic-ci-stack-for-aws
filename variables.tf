@@ -361,6 +361,31 @@ variable "instance_types" {
   }
 }
 
+variable "instance_requirements" {
+  description = "Optional - Attribute-based instance type selection. When set, the Auto Scaling group launches any instance type that matches these attributes in place of the instance_types list, and On-Demand instances use the 'lowest-price' allocation strategy because AWS does not allow 'prioritized' with instance requirements. The first entry of instance_types still sets the launch template's instance type and the detected architecture, so it should be a type that matches. Attribute names and values follow the instance_requirements block of aws_autoscaling_group."
+  type = object({
+    vcpu_count = object({
+      min = number
+      max = optional(number)
+    })
+    memory_mib = object({
+      min = number
+      max = optional(number)
+    })
+    accelerator_count = optional(object({
+      min = optional(number)
+      max = optional(number)
+    }))
+    bare_metal                                  = optional(string)
+    burstable_performance                       = optional(string)
+    cpu_manufacturers                           = optional(list(string))
+    excluded_instance_types                     = optional(list(string))
+    instance_generations                        = optional(list(string))
+    spot_max_price_percentage_over_lowest_price = optional(number)
+  })
+  default = null
+}
+
 variable "instance_operating_system" {
   description = "The operating system to run on the instances."
   type        = string
