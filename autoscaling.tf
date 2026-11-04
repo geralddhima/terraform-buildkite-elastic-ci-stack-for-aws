@@ -230,11 +230,8 @@ resource "aws_autoscaling_group" "agent_auto_scale_group" {
         for_each = var.instance_requirements == null ? [] : [var.instance_requirements]
         content {
           instance_requirements {
-            bare_metal                                  = override.value.bare_metal
-            burstable_performance                       = override.value.burstable_performance
             cpu_manufacturers                           = override.value.cpu_manufacturers
             excluded_instance_types                     = override.value.excluded_instance_types
-            instance_generations                        = override.value.instance_generations
             spot_max_price_percentage_over_lowest_price = override.value.spot_max_price_percentage_over_lowest_price
 
             vcpu_count {
@@ -248,10 +245,9 @@ resource "aws_autoscaling_group" "agent_auto_scale_group" {
             }
 
             dynamic "accelerator_count" {
-              for_each = override.value.accelerator_count == null ? [] : [override.value.accelerator_count]
+              for_each = override.value.max_accelerator_count == null ? [] : [override.value.max_accelerator_count]
               content {
-                min = accelerator_count.value.min
-                max = accelerator_count.value.max
+                max = accelerator_count.value
               }
             }
           }
